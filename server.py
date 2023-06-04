@@ -70,3 +70,5 @@ class Server:
                 threading.Thread(target=self.handle_client, args=(client_socket,)).start()
             except:
                 self.ServerShutdown()
+serv = Server()
+serv.start_server()

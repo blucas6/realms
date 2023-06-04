@@ -4,6 +4,9 @@ import pickle
 import sys
 from tmp import Poop
 from commands import *
+from gameclient import GameClient
+from commands import *
+from sites import Sites
 
 class Client:
     def __init__(self):
@@ -11,6 +14,7 @@ class Client:
         self.IP_ADDRESS = 'localhost'
         self.PORT = 3000
         self.MAX_BUFFER_SIZE = 4096
+        self.GameClient = GameClient()
     
     def serialize(self, obj):
         return pickle.dumps(obj)
@@ -20,8 +24,22 @@ class Client:
             try:
                 message = self.client_socket.recv(1024).decode('utf-8')
                 print(message)
-            except:
-                print('An error occurred while receiving messages.')
+                if message[0:len(CMD_SEND_OBJ)] == CMD_SEND_OBJ:
+                    total_size = int(message[len(CMD_SEND_OBJ)+1::])
+                    serialized_obj = b''
+                    print(f'Receiving object (size:{total_size})')
+                    while total_size > 0:
+                        print('Total size: ', total_size)
+                        chunk = self.client_socket.recv(min(total_size, self.MAX_BUFFER_SIZE))
+                        serialized_obj += chunk
+                        total_size -= len(chunk)
+                        print(f'recv chunk {len(chunk)} bytes left {total_size}')
+                    original_obj = pickle.loads(serialized_obj)
+                    print(f'Object Message: {original_obj.landArray}')
+                else:
+                    print(message)
+            except Exception as e:
+                print('An error occurred while receiving messages.', e)
                 self.client_socket.close()
                 break
 

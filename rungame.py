@@ -1,6 +1,10 @@
 from gameclient import GameClient
 from gameserver import GameServer
+from client import Client
 
-s = GameServer()
+#get client connection
+client = Client()
+client.start_client()
 
-g = GameClient(s.sites[0])
+
+
