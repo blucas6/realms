@@ -22,7 +22,7 @@ def send_message():
 def start_client():
     global client_socket
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect(('localhost', 9999))
+    client_socket.connect(('localhost', 3000))
 
     receive_thread = threading.Thread(target=receive_messages)
     receive_thread.start()
